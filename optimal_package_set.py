@@ -9,6 +9,11 @@ Optimal Package Set
 
 import sys, time
 
+'''
+Construct a simple class representing a Debian Package
+that can be used to encapsulate the data that is read
+from the specified file
+'''
 class DebianPackage(object):
 
 	name  = None
@@ -32,6 +37,10 @@ class DebianPackage(object):
 	def __str__(self):
 		return '   ' + self.getName() + ' ' + str(self.getSize()) + ' ' + str(self.getVotes()) + 'kb'
 
+'''
+Use the subsets algorithm to construct a list
+of all subsets of the list
+'''
 def subsets(packages):
 	result = [[]]
 
@@ -42,6 +51,10 @@ def subsets(packages):
 		result += with_x
 	return result
 
+'''
+The Optimal Package Set algorithm. Constructed using
+subroutines of other, simpler algorithms
+'''
 def optimalPackageSet(packages, W):
 	best = None
 	bestValue = 0
@@ -56,6 +69,10 @@ def optimalPackageSet(packages, W):
 
 	return best
 
+'''
+Calculate the total votes of a given candidate
+of packages
+'''
 def totalVotes(candidate):
 	totalVotes = 0
 
@@ -64,6 +81,10 @@ def totalVotes(candidate):
 
 	return totalVotes
 
+'''
+Verify that the candidate is under the specified
+value of W
+'''
 def verifyOptimalPackageSet(W, candidate):
 	totalSize = 0
 
@@ -90,12 +111,19 @@ def printResults(bestPackageSet, startTime, endTime, n, w):
 
 def main():
 
-	if len(sys.argv) == 3 and '--scatter' in sys.argv:
+	'''
+	Use `python optimal_package_set.py [file] [lower bound] [upper bound] --scatter`
+	to generate the scatter plot data
+	'''
+	if len(sys.argv) == 5 and '--scatter' in sys.argv:
 		filename = sys.argv[1]
+
+		lowerBound = int(sys.argv[2])
+		upperBound = int(sys.argv[3]) + 1
 		
 		w = 2000
 
-		for n in range(1, 25):
+		for n in range(lowerBound, upperBound):
 			f = open(filename, 'r')
 			allPackages = []
 			packageLengthVerification = None
@@ -131,6 +159,7 @@ def main():
 
 	elif len(sys.argv) == 4:
 		filename = sys.argv[1]
+		
 		n = int(sys.argv[2])
 		w = int(sys.argv[3])
 
@@ -167,8 +196,9 @@ def main():
 		printResults(bestPackageSet, start, end, n, w)
 
 	else:
-		print('error: you must supply exactly two arguments\n\n' +
-			  'usage: python3 <Python source code file> <text file> <n> <W>')
+		print('ERROR: incorrect number of arguments specified\n\n' +
+			  'USAGE: \n\tpython3 <source code file> <text file> <n> <W> OR:' + 
+			  '\n\tpython3 <source code file> <text file> <lower bound> <upper bound> --scatter')
 		sys.exit(1)
 	
 	f.close()
