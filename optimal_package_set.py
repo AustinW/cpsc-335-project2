@@ -88,12 +88,6 @@ def printResults(bestPackageSet, startTime, endTime, n, w):
 
 	print('   Elapsed time = ' + '%.2f' %  round(endTime - startTime, 2) + ' seconds')
 
-def part1():
-	pass
-
-def part2():
-	pass
-
 def main():
 
 	if len(sys.argv) == 3 and '--scatter' in sys.argv:
