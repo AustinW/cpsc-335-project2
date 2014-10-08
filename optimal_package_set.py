@@ -1,6 +1,12 @@
 '''
 Austin White
+austinw@csu.fullerton
+10/7/2014
+
+Lab 2
+Optimal Package Set
 '''
+
 import sys, time
 
 class DebianPackage(object):
@@ -90,7 +96,46 @@ def part2():
 
 def main():
 
-	if len(sys.argv) == 4:
+	if len(sys.argv) == 3 and '--scatter' in sys.argv:
+		filename = sys.argv[1]
+		
+		w = 2000
+
+		for n in range(1, 25):
+			f = open(filename, 'r')
+			allPackages = []
+			packageLengthVerification = None
+
+			i = 0
+			for line in f:
+
+				if i > n:
+					break
+				
+				# skip the first line
+				if i is not 0:
+					components = line.split(' ')
+					package = DebianPackage(components[0], int(components[1]), int(components[2]))
+					allPackages.append(package)
+				else:
+					packageLengthVerification = int(line)
+
+				i = i + 1
+
+			assert(len(allPackages) == n)
+			
+			start = time.perf_counter()
+			
+			# Algorithm
+			bestPackageSet = optimalPackageSet(allPackages, w)
+
+			end = time.perf_counter()
+			
+			# Display results...
+			printResults(bestPackageSet, start, end, n, w)
+
+
+	elif len(sys.argv) == 4:
 		filename = sys.argv[1]
 		n = int(sys.argv[2])
 		w = int(sys.argv[3])
@@ -126,14 +171,13 @@ def main():
 		
 		# Display results...
 		printResults(bestPackageSet, start, end, n, w)
-		
-	elif len(sys.argv) == 5 and '--scatter' in sys.argv:
-		print('bar')
+
 	else:
 		print('error: you must supply exactly two arguments\n\n' +
 			  'usage: python3 <Python source code file> <text file> <n> <W>')
 		sys.exit(1)
-	sys.exit(0)
+	
+	f.close()
 
 if __name__ == '__main__':
 	main()
